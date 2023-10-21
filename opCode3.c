@@ -1,57 +1,63 @@
 #include "monty.h"
 
 /**
- *_rotl - Rotates the stack to the top
- *@stack: A pointer to the stack
- *@line_number: The line number in the Monty bytecode file
+ *_rotl - Rotates the stack to the left.
+ *@doubly: Double-linked list head
+ *@cline: Line number
+ *
+ *Description:
+ *The _rotl function rotates the stack to the left, moving the top element to
+ *the bottom. It takes a double-linked list head doubly and the current line
+ *number cline as parameters. If the stack is empty or has only one element,
+ *it does nothing.
  */
-void _rotl(stack_t **stack, unsigned int line_number)
+void _rotl(stack_t **doubly, unsigned int cline)
 {
-	stack_t *temp1, *temp2;
+	stack_t *aux = *doubly;
+	(void) cline;
 
-	if (!stack || !*stack || !(*stack)->next)
+	if (*doubly == NULL || (*doubly)->next == NULL)
 		return;
 
-	temp1 = *stack;
-	temp2 = (*stack)->next;
-
-	while (temp2->next)
+	while (aux->next != NULL)
 	{
-		temp1 = temp1->next;
-		temp2 = temp2->next;
+		aux = aux->next;
 	}
 
-	temp1->next = NULL;
-	temp2->prev = NULL;
-	temp2->next = *stack;
-	(*stack)->prev = temp2;
-	*stack = temp2;
-
-	(void) line_number;
+	aux->next = *doubly;
+	(*doubly)->prev = aux;
+	*doubly = (*doubly)->next;
+	(*doubly)->prev = NULL;
+	aux->next->next = NULL;
 }
 
 /**
- *_rotr - Rotates the stack to the bottom
- *@stack: A pointer to the stack
- *@line_number: The line number in the Monty bytecode file
+ *_rotr - Rotates the stack to the right.
+ *@doubly: Double-linked list head
+ *@cline: Line number
+ *
+ *Description:
+ *The _rotr function rotates the stack to the right, moving the bottom element
+ *to the top. It takes a double-linked list head doubly and the current line
+ *number cline as parameters. If the stack is empty or has only one element,
+ *it does nothing.
  */
-void _rotr(stack_t **stack, unsigned int line_number)
+void _rotr(stack_t **doubly, unsigned int cline)
 {
-	stack_t *temp;
+	stack_t *aux = *doubly;
+	(void) cline;
 
-	if (!stack || !*stack || !(*stack)->next)
+	if (*doubly == NULL || (*doubly)->next == NULL)
 		return;
 
-	temp = *stack;
+	while (aux->next != NULL)
+	{
+		aux = aux->next;
+	}
 
-	while (temp->next)
-		temp = temp->next;
-
-	temp->prev->next = NULL;
-	temp->next = *stack;
-	temp->prev = NULL;
-	(*stack)->prev = temp;
-	*stack = temp;
-
-	(void) line_number;
+	aux->prev->next = NULL;
+	aux->prev = NULL;
+	aux->next = *doubly;
+	(*doubly)->prev = aux;
+	*doubly = aux;
 }
